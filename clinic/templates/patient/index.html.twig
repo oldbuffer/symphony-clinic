@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Список пациентов{% endblock %}
+
+{% block body %}
+<h1>Пациенты</h1>
+
+{% if patients is empty %}
+    <p>Пока нет пациентов.</p>
+{% else %}
+    <ul>
+    {% for patient in patients %}
+        <li>
+            {{ patient.name }} — {{ patient.email }}
+            {% if patient.phone %} (тел: {{ patient.phone }}){% endif %}
+            {% if patient.birthDate %} — дата рождения: {{ patient.birthDate|date('d.m.Y') }}{% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

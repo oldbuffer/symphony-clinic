@@ -5,9 +5,11 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
         {% endblock %}
 
         {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
 
         {% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
@@ -17,7 +19,42 @@
         <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
         {% endif %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="bg-gray-100 min-h-screen">
+        <nav class="bg-white shadow mb-8">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+                <a href="{{ path('app_homepage') }}" class="text-xl font-bold text-gray-800">Клиника</a>
+                <div class="space-x-4">
+                    <a href="{{ path('patients_list') }}" class="text-gray-600 hover:text-gray-900">Пациенты</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('patient_new') }}" class="text-gray-600 hover:text-gray-900">Добавить пациента</a>
+                    {% endif %}
+                    {% if is_granted('ROLE_DOCTOR') or is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('appointment_new') }}" class="text-gray-600 hover:text-gray-900">Новая запись</a>
+                    {% endif %}
+
+                    <div class="border-l pl-4 ml-4">
+                        {% if app.user %}
+                            <span class="text-sm text-gray-700">Вы: {{ app.user.email }}</span>
+                            <a href="{{ path('app_logout') }}" class="text-red-500 hover:underline ml-2">Выйти</a>
+                        {% else %}
+                            <a href="{{ path('app_login') }}" class="text-blue-500">Войти</a>
+                            <a href="{{ path('app_register') }}" class="text-blue-500 ml-2">Регистрация</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="max-w-7xl mx-auto px-4 pb-12">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="rounded-md p-4 mb-4 {% if label == 'success' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            {% block body %}{% endblock %}
+        </main>
     </body>
 </html>

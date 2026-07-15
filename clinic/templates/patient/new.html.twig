@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Новый пациент{% endblock %}
+
+{% block body %}
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">Добавить пациента</h1>
+
+        <div class="bg-white p-6 rounded-lg shadow">
+            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+
+            <div>
+                {{ form_label(form.name, 'Имя', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                {{ form_widget(form.name, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500'}}) }}
+                {{ form_errors(form.name) }}
+            </div>
+
+            <div>
+                {{ form_label(form.email, 'Email', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                {{ form_widget(form.email, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500'}}) }}
+                {{ form_errors(form.email) }}
+            </div>
+
+            <div>
+                {{ form_label(form.phone, 'Телефон', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                {{ form_widget(form.phone, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm'}}) }}
+                {{ form_errors(form.phone) }}
+            </div>
+
+            <div>
+                {{ form_label(form.birthDate, 'Дата рождения', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                {{ form_widget(form.birthDate, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm'}}) }}
+                {{ form_errors(form.birthDate) }}
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Сохранить
+            </button>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

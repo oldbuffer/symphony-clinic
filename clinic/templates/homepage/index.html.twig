@@ -1,6 +1,12 @@
 <html>
     <head><title>Clinic</title></head>
     <body>
+        <nav>
+        <a href="{{ path('patients_list') }}">Пациенты</a>
+        <a href="{{ path('patient_new') }}">Добавить пациента</a>
+        <a href="{{ path('appointment_new') }}">Новая запись</a>
+        </nav>
+        <hr>
         <h1>Welcome to Clinic</h1>
         <p>Today is {{ date|date('d.m.Y') }}</p>
     </body>

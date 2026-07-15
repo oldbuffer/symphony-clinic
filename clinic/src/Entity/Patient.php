@@ -6,8 +6,12 @@ use App\Repository\PatientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: PatientRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'Пациент с таким email уже существует')]
 class Patient
 {
     #[ORM\Id]
@@ -16,16 +20,22 @@ class Patient
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Имя обязательно')]
+    #[Assert\Length(min: 2, max: 255)]
     private ?string $name = null;
 
     #[ORM\Column(length: 20, nullable: true)]
+    #[Assert\Length(max: 20)]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank(message: 'Email обязателен')]
+    #[Assert\Email(message: 'Неверный формат email')]
     private ?string $email = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $birthDate = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Assert\LessThanOrEqual('today', message: 'Дата рождения не может быть в будущем')]
+    private ?\DateTimeInterface $birthDate = null;
 
     /**
      * @var Collection<int, Appointment>

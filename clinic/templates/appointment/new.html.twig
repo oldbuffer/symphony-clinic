@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Новая запись на приём{% endblock %}
+
+{% block body %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">Новая запись на приём</h1>
+
+    <div class="bg-white p-6 rounded-lg shadow">
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+
+        <div>
+            {{ form_label(form.patient, 'Пациент', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.patient, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500'}}) }}
+            {{ form_errors(form.patient) }}
+        </div>
+
+        <div>
+            {{ form_label(form.doctorId, 'ID доктора', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.doctorId, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500'}}) }}
+            {{ form_errors(form.doctorId) }}
+        </div>
+
+        <div>
+            {{ form_label(form.appointmentDate, 'Дата и время приёма', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.appointmentDate, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500'}}) }}
+            {{ form_errors(form.appointmentDate) }}
+        </div>
+
+        <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Создать запись
+        </button>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

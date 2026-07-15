@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Пациент {{ patient.name }}{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto">
+    <div class="mb-8">
+        <a href="{{ path('patients_list') }}" class="text-indigo-600 hover:text-indigo-900">← Назад к списку</a>
+    </div>
+
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <h1 class="text-2xl font-bold text-gray-900">{{ patient.name }}</h1>
+        </div>
+        <div class="px-6 py-4 space-y-2">
+            <p class="text-sm text-gray-600"><span class="font-medium">Email:</span> {{ patient.email }}</p>
+            {% if patient.phone %}
+                <p class="text-sm text-gray-600"><span class="font-medium">Телефон:</span> {{ patient.phone }}</p>
+            {% endif %}
+            {% if patient.birthDate %}
+                <p class="text-sm text-gray-600"><span class="font-medium">Дата рождения:</span> {{ patient.birthDate|date('d.m.Y') }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <h2 class="text-xl font-semibold mt-8 mb-4">Записи на приём</h2>
+
+    {% if appointments is empty %}
+        <p class="text-gray-500">Нет записей</p>
+    {% else %}
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <ul class="divide-y divide-gray-200">
+                {% for appointment in appointments %}
+                    <li class="px-6 py-4 flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Доктор ID: {{ appointment.doctorId }}</p>
+                            <p class="text-sm text-gray-500">{{ appointment.appointmentDate|date('d.m.Y H:i') }}</p>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-{{ appointment.status == 'scheduled' ? 'green' : 'red' }}-100 text-{{ appointment.status == 'scheduled' ? 'green' : 'red' }}-800">
+                            {{ appointment.status }}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

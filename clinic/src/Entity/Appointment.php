@@ -4,23 +4,30 @@ namespace App\Entity;
 
 use App\Repository\AppointmentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: AppointmentRepository::class)]
 class Appointment
 {
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+    
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Range(min: 1, max: 5, notInRangeMessage: 'ID доктора должен быть от 1 до 5')]
+    private ?int $doctorId = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointments')]
     private ?Patient $patient = null;
 
-    #[ORM\Column]
-    private ?int $doctorId = null;
-
-    #[ORM\Column]
-    private ?\DateTime $appointmentDate = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank(message: 'Укажите дату и время приёма')]
+    #[Assert\GreaterThanOrEqual('today', message: 'Дата приёма не может быть в прошлом')]
+    private ?\DateTimeInterface $appointmentDate = null;
 
     #[ORM\Column(length: 20)]
     private ?string $status = null;

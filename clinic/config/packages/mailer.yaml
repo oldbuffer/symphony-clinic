@@ -1,0 +1,9 @@
+framework:
+    messenger:
+        transports:
+            # синхронная отправка: обработчик выполняется сразу в том же процессе
+            sync: 'sync://'
+
+        routing:
+            # Все сообщения по умолчанию будем отправлять в sync
+            'App\Message\*': sync

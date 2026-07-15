@@ -2,25 +2,32 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
+use App\Message\AppointmentCreated;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Routing\Attribute\Route;
 
 final class AppointmentController extends AbstractController
 {
     #[Route('/appointment/new', name: 'appointment_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
+    public function new(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        MessageBusInterface $bus
+    ): Response {
         $appointment = new Appointment();
+
         // Если у пользователя роль доктора, подставляем его ID
         if ($this->isGranted('ROLE_DOCTOR')) {
             $user = $this->getUser();
             $appointment->setDoctorId($user->getId());
         }
+
         $form = $this->createForm(AppointmentType::class, $appointment);
         $form->handleRequest($request);
 
@@ -28,7 +35,10 @@ final class AppointmentController extends AbstractController
             $entityManager->persist($appointment);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Запись успешно создана');
+            // Отправляем сообщение о создании записи
+            $bus->dispatch(new AppointmentCreated($appointment->getId()));
+
+            $this->addFlash('success', 'Запись создана, уведомление отправлено');
 
             return $this->redirectToRoute('patient_show', ['id' => $appointment->getPatient()->getId()]);
         }
